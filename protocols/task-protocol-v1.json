@@ -1,0 +1,17 @@
+{
+  "task_id": "",
+  "title": "",
+  "priority": "low",
+  "status": "pending",
+  "owner": "",
+  "repo": "",
+  "branch": "",
+  "files": [],
+  "risk_level": "low",
+  "rollback_available": false,
+  "created_at": "",
+  "updated_at": "",
+  "actions": [],
+  "logs": [],
+  "result": ""
+}

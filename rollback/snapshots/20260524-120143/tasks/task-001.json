@@ -1,0 +1,19 @@
+{
+  "task_id": "TASK-001",
+  "title": "Test SolarBox execution",
+  "priority": "low",
+  "status": "pending",
+  "owner": "Dashka",
+  "repo": "SOLAR-PAYCENT",
+  "branch": "test/task-001",
+  "files": [],
+  "risk_level": "low",
+  "rollback_available": true,
+  "created_at": "2026-05-24",
+  "updated_at": "2026-05-24",
+  "actions": [
+  "rm -rf /tmp/test"
+],
+  "logs": [],
+  "result": ""
+}
