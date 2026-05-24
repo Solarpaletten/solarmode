@@ -1,0 +1,30 @@
+{
+  "cycle_started_at": "2026-05-24T21:42:46.086Z",
+  "total_artifacts": 3,
+  "verified": 1,
+  "mismatches": 2,
+  "artifacts": [
+    {
+      "file": "art-001.json",
+      "artifact_id": "ART-001",
+      "signature_created": true,
+      "manifest_created": true,
+      "replay_status": "mismatch"
+    },
+    {
+      "file": "art-002.json",
+      "artifact_id": "ART-002",
+      "signature_created": true,
+      "manifest_created": true,
+      "replay_status": "mismatch"
+    },
+    {
+      "file": "art-003.json",
+      "artifact_id": "ART-003",
+      "signature_created": true,
+      "manifest_created": true,
+      "replay_status": "verified"
+    }
+  ],
+  "cycle_finished_at": "2026-05-24T21:42:46.086Z"
+}

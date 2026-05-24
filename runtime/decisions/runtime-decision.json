@@ -1,0 +1,7 @@
+{
+  "generated_at": "2026-05-24T23:02:18.855Z",
+  "runtime_health": "critical",
+  "merge_candidates": 2,
+  "decision": "rollback",
+  "reason": "critical runtime incidents detected"
+}

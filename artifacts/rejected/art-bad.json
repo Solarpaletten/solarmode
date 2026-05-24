@@ -1,0 +1,10 @@
+{
+  "artifact_id": "ART-BAD",
+  "operations": [
+    {
+      "op": "rm"
+    }
+  ],
+  "results": [],
+  "status": "rejected"
+}

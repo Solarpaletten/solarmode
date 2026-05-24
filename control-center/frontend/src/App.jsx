@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react"
 import { snapshotsData } from "./data/snapshots"
 import { metricsData } from "./data/metrics"
+import DecisionPanel from "./components/DecisionPanel"
 
 
 function App() {
   const [backendStatus, setBackendStatus] = useState("Connecting...")
+  const [runtimeStatus, setRuntimeStatus] = useState(null)
+
+  const [health, setHealth] = useState(null)
+  const [decision, setDecision] = useState(null)
+
   const [queueState, setQueueState] = useState({
     pending: [],
     running: [],
@@ -12,6 +18,7 @@ function App() {
     failed: []
   })
   const [logs, setLogs] = useState([])
+
   const createTask = () => {
     fetch("http://localhost:3001/task", {
       method: "POST",
@@ -22,6 +29,13 @@ function App() {
         title: "Frontend Runtime Task"
       })
     })
+  }
+  const fetchRuntime = () => {
+    fetch("http://localhost:3010/runtime/status")
+      .then((res) => res.json())
+      .then((data) => {
+        setRuntimeStatus(data)
+      })
   }
 
   useEffect(() => {
@@ -38,6 +52,22 @@ function App() {
 
     }
 
+    const fetchHealth = () => {
+
+      fetch(
+        "http://localhost:3010/runtime/status"
+      )
+        .then((res) => res.json())
+        .then((data) => {
+
+          setHealth(
+            data.health || null
+          )
+
+        })
+
+    }
+
     const fetchLogs = () => {
       fetch("http://localhost:3001/logs")
         .then((res) => res.json())
@@ -49,13 +79,19 @@ function App() {
 
     fetchQueue()
     fetchLogs()
+    fetchRuntime()
+    fetchHealth()
 
     const interval = setInterval(fetchQueue, 3000)
     const logsInterval = setInterval(fetchLogs, 3000)
+    const runtimeInterval = setInterval(fetchRuntime, 3000)
+    const healthInterval = setInterval(fetchHealth, 3000)
 
     return () => {
       clearInterval(interval)
       clearInterval(logsInterval)
+      clearInterval(runtimeInterval)
+      clearInterval(healthInterval)
     }
   }, [])
 
@@ -115,6 +151,10 @@ function App() {
           )
         })}
       </ul>
+
+      <DecisionPanel
+        decision={runtimeStatus?.decision}
+      />
 
       <h2>Snapshots</h2>
 
@@ -184,6 +224,60 @@ function App() {
       <p>🛰 {backendStatus}</p>
 
       <h2>Runtime</h2>
+      <h2>Runtime Intelligence</h2>
+
+      {health && (
+
+        <div>
+
+          <p
+            style={{
+              color:
+                health.health === "critical"
+                  ? "#ef4444"
+                  : health.health === "warning"
+                    ? "#f59e0b"
+                    : "#22c55e"
+            }}
+          >
+            🚦 Health:
+            {health.health}
+          </p>
+
+          <p>
+            🔴 Critical:
+            {health.critical_incidents}
+          </p>
+
+          <p>
+            🟡 Warnings:
+            {health.warning_incidents}
+          </p>
+
+        </div>
+
+      )}
+
+      {runtimeStatus && (
+        <div>
+
+          <p>
+            📦 Archived:
+            {runtimeStatus.archived_artifacts}
+          </p>
+
+          <p>
+            ✅ Candidates:
+            {runtimeStatus.merge_candidates}
+          </p>
+
+          <p>
+            📄 Reports:
+            {runtimeStatus.reports_created}
+          </p>
+
+        </div>
+      )}
 
       <p>SolarBox is operational.</p>
     </div>

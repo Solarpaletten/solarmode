@@ -1,0 +1,7 @@
+{
+  "incident_id": "INC-1779661447122",
+  "type": "task-failed",
+  "severity": "critical",
+  "message": "TASK FAILED | TASK-001",
+  "created_at": "2026-05-24T22:24:07.122Z"
+}

@@ -91,5 +91,10 @@ app.post("/task", (req, res) => {
 })
 
 app.listen(3001, () => {
-  console.log("SolarBox backend running on port 3001")
+  console.log(`
+🚀 SolarBox Backend Online
+
+Local:
+http://localhost:3001
+`)
 })

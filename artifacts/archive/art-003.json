@@ -1,0 +1,44 @@
+{
+  "artifact_id": "ART-003",
+  "type": "runtime-task",
+  "source": "Claude",
+  "status": "incoming",
+  "operations": [
+    {
+      "op": "echo",
+      "args": [
+        "Artifact execution stored"
+      ]
+    },
+    {
+      "op": "date"
+    },
+    {
+      "op": "pwd"
+    }
+  ],
+  "results": [
+    {
+      "operation": "echo",
+      "result": "HACKED"
+    },
+    {
+      "operation": "date",
+      "result": "2026-05-24T20:49:27.708Z"
+    },
+    {
+      "operation": "pwd",
+      "result": "/Users/solar-runner/SOLAR-PAYCENT/solarmode"
+    }
+  ],
+  "archived_at": "2026-05-24T21:19:28.833Z",
+  "manifest": {
+    "runtime_version": "v1",
+    "worker": "artifact-worker-test",
+    "processed_at": "2026-05-24T21:22:52.224Z",
+    "execution_time_ms": 5
+  },
+  "manifest_created": true,
+  "signature": "668a3e49659bab4a905d8bf9128da8cba6b0ce4cb32e1a5f12f2c7de12853968",
+  "signature_created": true
+}

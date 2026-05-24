@@ -1,0 +1,24 @@
+{
+  "artifact_id": "ART-001",
+  "type": "runtime-task",
+  "source": "Claude",
+  "status": "incoming",
+  "operations": [
+    {
+      "op": "echo",
+      "args": [
+        "Hello from artifact pipeline"
+      ]
+    }
+  ],
+  "archived_at": "2026-05-24T21:19:28.829Z",
+  "manifest": {
+    "runtime_version": "v1",
+    "worker": "artifact-worker-test",
+    "processed_at": "2026-05-24T21:22:52.220Z",
+    "execution_time_ms": 5
+  },
+  "manifest_created": true,
+  "signature": "9c405d5ab611f314584b47382b1faa8d79044c1e3b23100043d10dcb7e016610",
+  "signature_created": true
+}
