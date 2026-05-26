@@ -68,24 +68,24 @@ app.get("/runtime/status", (req, res) => {
   res.json({
 
     health:
-  fs.existsSync(healthPath)
-    ? JSON.parse(
-        fs.readFileSync(
-          healthPath,
-          "utf8"
+      fs.existsSync(healthPath)
+        ? JSON.parse(
+          fs.readFileSync(
+            healthPath,
+            "utf8"
+          )
         )
-      )
-    : null,
+        : null,
 
     decision:
-  fs.existsSync(decisionPath)
-    ? JSON.parse(
-        fs.readFileSync(
-          decisionPath,
-          "utf8"
+      fs.existsSync(decisionPath)
+        ? JSON.parse(
+          fs.readFileSync(
+            decisionPath,
+            "utf8"
+          )
         )
-      )
-    : null,
+        : null,
 
     runtime: "online",
 
@@ -121,5 +121,62 @@ app.listen(PORT, () => {
   console.log(
     `Runtime Dashboard API running on ${PORT}`
   )
+
+})
+
+app.post("/runtime/merge", (req, res) => {
+
+  console.log("RUNTIME MERGE")
+
+  res.json({
+    success: true
+  })
+
+})
+
+app.post("/runtime/rollback", (req, res) => {
+
+  console.log("RUNTIME ROLLBACK")
+
+  res.json({
+    success: true
+  })
+
+})
+
+app.get("/agents/status", (req, res) => {
+
+  res.json([
+    {
+      id: "DASHKA",
+      status: "online",
+      tasks: 2
+    },
+
+    {
+      id: "CLAUDE",
+      status: "running",
+      tasks: 4
+    },
+
+    {
+      id: "KIMI",
+      status: "idle",
+      tasks: 0
+    },
+
+    {
+      id: "SOLANA",
+      status: "offline",
+      tasks: 0
+    },
+
+    {
+      id: "QWEN_72B",
+      name: "Qwen 2.5 72B LLaMA",
+      status: "offline",
+      tasks: 0
+    }
+  ])
 
 })
