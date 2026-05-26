@@ -2,3 +2,6 @@ tasks/
 queue/*.json
 runtime/logs/
 runtime/providers/.env
+node_modules/
+.env
+dist/
