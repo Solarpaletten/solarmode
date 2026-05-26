@@ -1,3 +1,5 @@
+let isProcessing = false
+
 const fs = require("fs")
 const path = require("path")
 
@@ -27,6 +29,11 @@ const SAFE_ACTIONS = [
     "cat"
 ]
 
+const {
+    askClaude
+} = require(
+    "../../runtime/providers/claude-provider"
+)
 
 function ensureDir(dir) {
 
@@ -41,7 +48,7 @@ function ensureDir(dir) {
 ensureDir(tasksDir)
 ensureDir(reportsDir)
 
-function processTasks() {
+async function processTasks() {
 
     const files =
         fs.readdirSync(tasksDir)
@@ -51,7 +58,7 @@ function processTasks() {
             file.endsWith(".json")
         )
 
-    taskFiles.forEach((file) => {
+    for (const file of taskFiles) {
 
         const taskPath =
             path.join(tasksDir, file)
@@ -73,7 +80,7 @@ function processTasks() {
             task.status === "completed" ||
             task.status === "failed"
         ) {
-            return
+            continue
         }
 
         console.log(
@@ -159,16 +166,67 @@ function processTasks() {
             )
 
             fs.writeFileSync(
-            outputPath,
-            task.content
+                outputPath,
+                task.content
             )
-            
+
             console.log(
-                 `FILE GENERATED: ${outputPath}`
+                `FILE GENERATED: ${outputPath}`
             )
-            
+
         }
-        
+
+        if (task.type === "ai_generate") {
+
+            try {
+
+                console.log(
+                    `AI GENERATION STARTED`
+                )
+
+                const aiResult =
+                    await askClaude(
+                        task.prompt
+                    )
+
+                const outputPath =
+                    path.join(
+                        ROOT_DIR,
+                        task.output
+                    )
+
+                ensureDir(
+                    path.dirname(outputPath)
+                )
+
+                fs.writeFileSync(
+                    outputPath,
+                    aiResult
+                )
+
+                task.logs.push(
+                    "AI GENERATION COMPLETED"
+                )
+
+                console.log(
+                    `AI FILE GENERATED: ${outputPath}`
+                )
+
+            } catch (error) {
+
+                task.status = "failed"
+
+                task.logs.push(
+                    error.message
+                )
+
+                console.log(
+                    `AI GENERATION FAILED: ${error.message}`
+                )
+
+            }
+
+        }
 
         const reportContent = `
 # Runtime Report
@@ -192,7 +250,7 @@ Logs:
 ${task.logs.join("\n")}
 
 Actions:
-${task.actions.join("\n")}
+${task.actions?.join("\n") || ""}
 `
         fs.writeFileSync(
             reportPath,
@@ -211,12 +269,32 @@ ${task.actions.join("\n")}
         console.log(
             `TASK COMPLETED: ${task.task_id}`
         )
-    })
+    }
 
 }
 
-setInterval(
-    processTasks,
-    3000
-)
+setInterval(async () => {
 
+    if (isProcessing) {
+        return
+    }
+
+    isProcessing = true
+
+    try {
+
+        await processTasks()
+
+    } catch (error) {
+
+        console.log(
+            `RUNTIME ERROR: ${error.message}`
+        )
+
+    } finally {
+
+    isProcessing = false
+
+}
+
+}, 3000)

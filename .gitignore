@@ -1,3 +1,4 @@
 tasks/
 queue/*.json
 runtime/logs/
+runtime/providers/.env
