@@ -124,7 +124,20 @@ function processTask() {
 
       failed.push(taskId)
 
-      task.status = "failed"
+      catch (error) {
+
+        task.status = "failed"
+
+        fs.writeFileSync(
+          taskPath,
+          JSON.stringify(task, null, 2)
+        )
+
+        console.log(
+          `ACTION FAILED: ${error.message}`
+        )
+
+      }
 
       writeJson(failedPath, failed)
 

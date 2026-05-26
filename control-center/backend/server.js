@@ -80,7 +80,7 @@ app.post("/task", (req, res) => {
 
   let pending = readJson(pendingPath)
 
-  pending.push(taskId)
+  pending.push(task)
 
   fs.writeFileSync(pendingPath, JSON.stringify(pending, null, 2))
 

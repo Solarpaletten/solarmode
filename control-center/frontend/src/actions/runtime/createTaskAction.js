@@ -11,9 +11,14 @@ export default async function createTaskAction(dispatch) {
     try {
 
         const response =
-            await createTask(
-                "Frontend Runtime Task"
-            )
+            await createTask({
+                title: "Frontend Runtime Task",
+                owner: "Dashka",
+                actions: [
+                    "pwd",
+                    "ls"
+                ]
+            })
 
         dispatch({
             type: RUNTIME_ACTIONS.CREATE_TASK,

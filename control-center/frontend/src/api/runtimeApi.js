@@ -31,27 +31,6 @@ export async function fetchRuntimeStatus() {
   return response.json()
 }
 
-export async function createTask(title) {
-
-  const response = await fetch(
-    `${API_BACKEND}/task`,
-    {
-      method: "POST",
-
-      headers: {
-        "Content-Type":
-          "application/json"
-      },
-
-      body: JSON.stringify({
-        title
-      })
-    }
-  )
-
-  return response.json()
-}
-
 export async function mergeRuntime() {
 
   const response = await fetch(
@@ -84,3 +63,24 @@ export async function fetchAgents() {
 
   return response.json()
 }
+
+export async function createTask(
+  payload
+) {
+
+  const response =
+    await fetch(
+      "http://localhost:3010/tasks/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    )
+
+  return response.json()
+
+} 

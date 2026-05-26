@@ -51,7 +51,7 @@ export default function RuntimeQueuePanel() {
         {queueState.pending.map((task) => (
 
           <div
-            key={`pending-${task.id}`}
+            key={`pending-${task.task_id}`}
             style={{
               marginBottom: "12px",
               padding: "10px",
@@ -60,7 +60,7 @@ export default function RuntimeQueuePanel() {
             }}
           >
 
-            <p>🆔 {task.id}</p>
+            <p>🆔 {task.task_id}</p>
 
             <p>📄 {task.title}</p>
 
@@ -68,7 +68,7 @@ export default function RuntimeQueuePanel() {
 
             <p>
               🕒 {
-                new Date(task.createdAt)
+                new Date(task.created_at)
                   .toLocaleTimeString()
               }
             </p>
@@ -82,7 +82,7 @@ export default function RuntimeQueuePanel() {
 
 
             <div
-              key={`running-${task.id}`}
+              key={`running-${task.task_id}`}
               style={{
                 marginBottom: "12px",
                 padding: "10px",
@@ -91,7 +91,7 @@ export default function RuntimeQueuePanel() {
               }}
             >
 
-              <p>🆔 {task.id}</p>
+              <p>🆔 {task.task_id}</p>
 
               <p>📄 {task.title}</p>
 
@@ -99,7 +99,7 @@ export default function RuntimeQueuePanel() {
 
               <p>
                 🕒 {
-                  new Date(task.createdAt)
+                  new Date(task.created_at)
                     .toLocaleTimeString()
                 }
               </p>
@@ -112,7 +112,7 @@ export default function RuntimeQueuePanel() {
           {queueState.completed.map((task) => (
 
             <div
-              key={`completed-${task.id}`}
+              key={`completed-${task.task_id}`}
               style={{
                 marginBottom: "12px",
                 padding: "10px",
@@ -121,7 +121,7 @@ export default function RuntimeQueuePanel() {
               }}
             >
 
-              <p>🆔 {task.id}</p>
+              <p>🆔 {task.task_id}</p>
 
               <p>📄 {task.title}</p>
 
@@ -129,7 +129,7 @@ export default function RuntimeQueuePanel() {
 
               <p>
                 🕒 {
-                  new Date(task.createdAt)
+                  new Date(task.created_at)
                     .toLocaleTimeString()
                 }
               </p>
@@ -141,7 +141,7 @@ export default function RuntimeQueuePanel() {
             {queueState.failed.map((task) => (
 
               <div
-                key={`failed-${task.id}`}
+                key={`failed-${task.task_id}`}
                 style={{
                   marginBottom: "12px",
                   padding: "10px",
@@ -150,7 +150,7 @@ export default function RuntimeQueuePanel() {
                 }}
               >
 
-                <p>🆔 {task.id}</p>
+                <p>🆔 {task.task_id}</p>
 
                 <p>📄 {task.title}</p>
 
@@ -158,7 +158,7 @@ export default function RuntimeQueuePanel() {
 
                 <p>
                   🕒 {
-                    new Date(task.createdAt)
+                    new Date(task.created_at)
                       .toLocaleTimeString()
                   }
                 </p>

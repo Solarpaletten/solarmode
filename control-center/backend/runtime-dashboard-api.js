@@ -42,6 +42,48 @@ const decisionPath = path.join(
   "runtime/decisions/runtime-decision.json"
 )
 
+const generatedDir = path.join(
+  ROOT_DIR,
+  "runtime/generated"
+)
+
+app.get("/runtime/generated", (req, res) => {
+
+  const files =
+    safeReadDir(generatedDir)
+
+  res.json(files)
+
+})
+
+app.get(
+  "/runtime/generated/:file",
+  (req, res) => {
+
+    const filePath = path.join(
+      generatedDir,
+      req.params.file
+    )
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({
+        error: "FILE NOT FOUND"
+      })
+    }
+
+    const content =
+      fs.readFileSync(
+        filePath,
+        "utf8"
+      )
+
+    res.json({
+      file: req.params.file,
+      content
+    })
+
+})
+
 function safeReadDir(dir) {
   try {
     return fs.readdirSync(dir)
@@ -140,6 +182,44 @@ app.post("/runtime/rollback", (req, res) => {
 
   res.json({
     success: true
+  })
+
+})
+
+app.post("/tasks/create", (req, res) => {
+
+  const taskId =
+    `TASK-${Date.now()}`
+
+  const task = {
+    task_id: taskId,
+    title: req.body.title,
+    status: "pending",
+    owner: req.body.owner || "Dashka",
+    priority: "medium",
+    actions: req.body.actions || [],
+    logs: [],
+    created_at: new Date().toISOString()
+  }
+
+  const taskPath = path.join(
+    ROOT_DIR,
+    "tasks",
+    `task-${Date.now()}.json`
+  )
+
+  fs.writeFileSync(
+    taskPath,
+    JSON.stringify(task, null, 2)
+  )
+
+  console.log(
+    `TASK CREATED: ${taskId}`
+  )
+
+  res.json({
+    success: true,
+    task
   })
 
 })
