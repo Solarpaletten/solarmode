@@ -1,0 +1,1 @@
+Solar Runtime is a decentralized compute network that enables developers to run and scale applications using distributed computing resources. It aims to make cloud computing more accessible and cost-effective by leveraging underutilized computing power from a global network of providers.
