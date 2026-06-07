@@ -66,11 +66,25 @@ async function processQueue() {
             `QUEUE: ${task.task_id}`
         )
 
+        if (!task.retry_count) {
+            task.retry_count = 0
+        }
+
+        if (!task.max_retries) {
+            task.max_retries = 3
+        }
+
+        if (
+            task.status === "failed" &&
+            task.retry_count >= task.max_retries
+        ) {
+            continue
+        }
 
         task.status = "running"
         task.started_at =
-             new Date().toISOString()
-        
+            new Date().toISOString()
+
         fs.writeFileSync(
             taskPath,
             JSON.stringify(
@@ -80,31 +94,36 @@ async function processQueue() {
             )
         )
 
-    let result = null
+        let result = null
 
-    try {
+        try {
 
-        result = await runTask(task)
+            result = await runTask(task)
 
-        task.status =
-            "completed"
+            task.status =
+                "completed"
 
-        task.completed_at =
-            new Date().toISOString()
+            task.completed_at =
+                new Date().toISOString()
 
-    } catch (error) {
+        } catch (error) {
 
-        task.status =
-            "failed"
-        
-        task.failed_at =
-            new Date().toISOString()
+            task.retry_count++
 
-        task.error =
-            error.message
-    }
+            task.status =
+                "failed"
 
-    console.log(result)
+            task.failed_at =
+                new Date().toISOString()
+
+            task.error =
+                error.message
+        }
+
+
+        if (result) {
+            console.log(result)
+        }
 
 
         writeHistory(task)

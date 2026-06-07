@@ -67,9 +67,7 @@ async function runTask(task) {
             error.message
         )
 
-        return {
-            error: error.message
-        }
+        throw error
     }
 
     const auditResult =
