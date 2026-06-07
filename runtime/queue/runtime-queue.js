@@ -20,6 +20,9 @@ const {
     "../history/history-engine"
 )
 
+
+
+
 async function processQueue() {
 
     const files =
@@ -63,11 +66,46 @@ async function processQueue() {
             `QUEUE: ${task.task_id}`
         )
 
-        const result =
-            await runTask(task)
+
+        task.status = "running"
+        task.started_at =
+             new Date().toISOString()
+        
+        fs.writeFileSync(
+            taskPath,
+            JSON.stringify(
+                task,
+                null,
+                2
+            )
+        )
+
+    let result = null
+
+    try {
+
+        result = await runTask(task)
 
         task.status =
             "completed"
+
+        task.completed_at =
+            new Date().toISOString()
+
+    } catch (error) {
+
+        task.status =
+            "failed"
+        
+        task.failed_at =
+            new Date().toISOString()
+
+        task.error =
+            error.message
+    }
+
+    console.log(result)
+
 
         writeHistory(task)
 
@@ -78,10 +116,6 @@ async function processQueue() {
                 null,
                 2
             )
-        )
-
-        console.log(
-            result
         )
     }
 }

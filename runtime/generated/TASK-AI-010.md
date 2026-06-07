@@ -1,0 +1,1 @@
+Solar Runtime is a modern WebAssembly runtime designed for building and deploying cloud-native applications with built-in support for multiple programming languages and automatic scaling capabilities.

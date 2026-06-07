@@ -1,0 +1,1 @@
+Solar Runtime is a blockchain infrastructure platform that enables developers to build and deploy decentralized applications with enhanced performance and scalability through its optimized runtime environment.
