@@ -57,13 +57,26 @@ async function processQueue() {
                 file
             )
 
-        const task =
-            JSON.parse(
-                fs.readFileSync(
-                    taskPath,
-                    "utf8"
+        let task
+
+        try {
+
+            task =
+                JSON.parse(
+                    fs.readFileSync(
+                        taskPath,
+                        "utf-8"
+                    )
                 )
+        
+        } catch (error) {
+
+            console.error(
+                `Invalid JSON: ${file}`,
             )
+
+            continue
+        }
 
         if (
             task.status ===
