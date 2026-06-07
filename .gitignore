@@ -11,3 +11,6 @@ runtime/history/*.json
 runtime/generated/*.md
 runtime/candidates/*.json
 runtime/decisions/*.json
+
+*.json
+!.gitkeep
