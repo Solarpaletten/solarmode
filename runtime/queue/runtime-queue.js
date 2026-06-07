@@ -20,8 +20,13 @@ const {
     "../history/history-engine"
 )
 
-
-
+const {
+    isLocked,
+    createLock,
+    removeLock
+} = require(
+    "../locks/lock-engine"
+)
 
 async function processQueue() {
 
@@ -66,6 +71,10 @@ async function processQueue() {
             `QUEUE: ${task.task_id}`
         )
 
+        if (isLocked(task.task_id)) {
+            continue
+        }
+
         if (!task.retry_count) {
             task.retry_count = 0
         }
@@ -97,6 +106,8 @@ async function processQueue() {
         let result = null
 
         try {
+            createLock(task.task_id)
+
 
             result = await runTask(task)
 
@@ -105,6 +116,8 @@ async function processQueue() {
 
             task.completed_at =
                 new Date().toISOString()
+            
+            removeLock(task.task_id)
 
         } catch (error) {
 
@@ -118,6 +131,9 @@ async function processQueue() {
 
             task.error =
                 error.message
+            
+            removeLock(task.task_id)
+
         }
 
 
