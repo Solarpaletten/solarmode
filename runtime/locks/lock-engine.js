@@ -4,33 +4,33 @@ const path = require('path');
 const LOCKS_DIR =
     __dirname
 
-function isLocked(taskId) {
-    try {
-        fs.accessSync(
-            path.join(
-                LOCKS_DIR,
-                `${taskId}.lock`
-            )
-        );
-        return true;
-    } catch (e) {
-        return false;
-    }
-
-}
-
 function createLock(taskId) {
+
+    const lockPath =
+
+        path.join(
+            LOCKS_DIR,
+            `${taskId}.lock`
+        )
+
     try {
+
         fs.writeFileSync(
-            path.join(
-                LOCKS_DIR,
-                `${taskId}.lock`
-            ),
-            ''
-        );
+            lockPath,
+            '',
+            {
+                flag: 'wx'
+            }
+        )
+
+        return true
+
     } catch (e) {
-        console.error(`Failed to create lock for ${taskId}:`, e);
+
+        return false
+
     }
+
 
 }
 
@@ -48,7 +48,6 @@ function removeLock(taskId) {
 }
 
 module.exports = {
-    isLocked,
     createLock,
     removeLock
 }

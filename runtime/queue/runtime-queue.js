@@ -21,7 +21,6 @@ const {
 )
 
 const {
-    isLocked,
     createLock,
     removeLock
 } = require(
@@ -71,9 +70,6 @@ async function processQueue() {
             `QUEUE: ${task.task_id}`
         )
 
-        if (isLocked(task.task_id)) {
-            continue
-        }
 
         if (!task.retry_count) {
             task.retry_count = 0
@@ -90,6 +86,14 @@ async function processQueue() {
             continue
         }
 
+        const locked =
+           createLock(task.task_id)
+
+        if (!locked) {
+            
+            continue
+        }
+
         task.status = "running"
         task.started_at =
             new Date().toISOString()
@@ -103,13 +107,14 @@ async function processQueue() {
             )
         )
 
+
         let result = null
 
+
         try {
-            createLock(task.task_id)
-
-
-            result = await runTask(task)
+            
+            result =
+             await runTask(task)
 
             task.status =
                 "completed"
@@ -117,7 +122,6 @@ async function processQueue() {
             task.completed_at =
                 new Date().toISOString()
             
-            removeLock(task.task_id)
 
         } catch (error) {
 
@@ -131,6 +135,9 @@ async function processQueue() {
 
             task.error =
                 error.message
+
+
+        } finally {
             
             removeLock(task.task_id)
 
