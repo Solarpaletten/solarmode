@@ -1,0 +1,10 @@
+{
+  "task_id": "TASK-AI-014",
+  "provider": "unknown-provider",
+  "status": "failed",
+  "retry_count": 3,
+  "max_retries": 3,
+  "started_at": "2026-06-07T16:22:13.218Z",
+  "failed_at": "2026-06-07T16:22:13.219Z",
+  "error": "Provider not found: unknown-provider"
+}

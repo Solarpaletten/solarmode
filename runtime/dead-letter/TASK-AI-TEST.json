@@ -1,0 +1,6 @@
+{
+  "task_id": "TASK-AI-TEST",
+  "status": "failed",
+  "retry_count": 3,
+  "max_retries": 3
+}

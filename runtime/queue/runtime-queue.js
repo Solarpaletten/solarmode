@@ -27,6 +27,12 @@ const {
     "../locks/lock-engine"
 )
 
+const {
+    moveToDeadLetter
+} = require(
+    "../dead-letter/dead-letter-engine"
+)
+
 async function processQueue() {
 
     const files =
@@ -83,14 +89,15 @@ async function processQueue() {
             task.status === "failed" &&
             task.retry_count >= task.max_retries
         ) {
+            moveToDeadLetter(task, taskPath)
             continue
         }
 
         const locked =
-           createLock(task.task_id)
+            createLock(task.task_id)
 
         if (!locked) {
-            
+
             continue
         }
 
@@ -112,16 +119,16 @@ async function processQueue() {
 
 
         try {
-            
+
             result =
-             await runTask(task)
+                await runTask(task)
 
             task.status =
                 "completed"
 
             task.completed_at =
                 new Date().toISOString()
-            
+
 
         } catch (error) {
 
@@ -138,7 +145,7 @@ async function processQueue() {
 
 
         } finally {
-            
+
             removeLock(task.task_id)
 
         }
