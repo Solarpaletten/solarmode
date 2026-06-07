@@ -5,3 +5,9 @@ runtime/providers/.env
 node_modules/
 .env
 dist/
+
+.DS_Store
+runtime/history/*.json
+runtime/generated/*.md
+runtime/candidates/*.json
+runtime/decisions/*.json
