@@ -74,7 +74,30 @@ function getStats() {
     return stats
 }
 
+function getTaskById(taskId) {
+
+    const tasks =
+        getAllTasks()
+
+    return tasks.find(
+        task =>
+            task.task_id === taskId
+    )
+}  
+
+function getTasksByStatus(status) {
+
+
+    return getAllTasks().filter(
+        task =>
+            task.status === status
+    )
+}
+
+
 module.exports = {
     getAllTasks,
-    getStats
+    getStats,
+    getTaskById,
+    getTasksByStatus
 }
