@@ -11,11 +11,9 @@ const {
 )
 
 const {
-    getALLArtifacts,
-    getArtifactByName,
-    getArtifactContent
+    handleArtifactRoutes
 } = require(
-    "../artifacts/artifact-registry"
+    "./routes/artifact-routes"
 )
 
 const PORT = 3001
@@ -59,63 +57,18 @@ const server =
                 )
             }
 
-            if (pathname === "/artifacts") {
-
-                return sendJson(
-                    res,
-                    getALLArtifacts()
-                )
-            }
-
             if (
                 pathname.startsWith(
-                    "/artifacts/"
-                ) &&
-                pathname.endsWith(
-                    "/content"
+                    "/artifacts"
                 )
             ) {
 
-                const artifactName =
-                    pathname
-                        .replace(
-                            "/artifacts/",
-                            ""
-                        )
-                        .replace(
-                            "/content",
-                            ""
-                        )
-
-                return sendJson(
+                return handleArtifactRoutes(
+                    pathname,
                     res,
-                    getArtifactContent(
-                        artifactName
-                    )
+                    sendJson
                 )
             }
-
-            if (
-                pathname.startsWith(
-                    "/artifacts/"
-                ) &&
-                !pathname.endsWith(
-                    "/content"
-                )
-            ) {
-
-                const artifactName =
-                    pathname.split("/").pop()
-
-
-                return sendJson(
-                    res,
-                    getArtifactByName(
-                        artifactName
-                    )
-                )
-            }
-
 
 
             if (pathname === "/tasks") {
