@@ -10,6 +10,14 @@ const {
     "../registry/task-registry"
 )
 
+const {
+    getALLArtifacts,
+    getArtifactByName,
+    getArtifactContent
+} = require(
+    "../artifacts/artifact-registry"
+)
+
 const PORT = 3001
 
 function sendJson(res, data, statusCode = 200) {
@@ -35,7 +43,11 @@ const server =
         (req, res) => {
 
             const parsedUrl =
-                url.parse(req.url, true)
+                new URL(
+                    req.url,
+                    `http://${req.headers.host}`
+                )
+
 
             const pathname =
                 parsedUrl.pathname
@@ -46,6 +58,65 @@ const server =
                     getStats()
                 )
             }
+
+            if (pathname === "/artifacts") {
+
+                return sendJson(
+                    res,
+                    getALLArtifacts()
+                )
+            }
+
+            if (
+                pathname.startsWith(
+                    "/artifacts/"
+                ) &&
+                pathname.endsWith(
+                    "/content"
+                )
+            ) {
+
+                const artifactName =
+                    pathname
+                        .replace(
+                            "/artifacts/",
+                            ""
+                        )
+                        .replace(
+                            "/content",
+                            ""
+                        )
+
+                return sendJson(
+                    res,
+                    getArtifactContent(
+                        artifactName
+                    )
+                )
+            }
+
+            if (
+                pathname.startsWith(
+                    "/artifacts/"
+                ) &&
+                !pathname.endsWith(
+                    "/content"
+                )
+            ) {
+
+                const artifactName =
+                    pathname.split("/").pop()
+
+
+                return sendJson(
+                    res,
+                    getArtifactByName(
+                        artifactName
+                    )
+                )
+            }
+
+
 
             if (pathname === "/tasks") {
                 return sendJson(
