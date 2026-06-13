@@ -14,6 +14,12 @@ const {
 )
 
 const {
+    handleCreateTaskRoute
+} = require("./routes/create-task-routes"
+
+)
+
+const {
     handleArtifactRoutes
 } = require(
     "./routes/artifact-routes"
@@ -61,15 +67,34 @@ const server =
             }
 
             if (
-                pathname.startsWith("/tasks")
-
+                pathname.startsWith(
+                    "/tasks"
+                )  &&
+                    req.method === "POST"
             ) {
+
+               return handleCreateTaskRoute(
+                        req,    
+                        res,
+                        sendJson
+               )
+            }
+
+            if (
+                pathname.startsWith(
+                    "/tasks"
+                )
+            ) {
+
                 return handleTaskRoutes(
                        pathname,
                        res,
                        sendJson
                        )
             }
+
+            
+            
 
             if (
                 pathname.startsWith(

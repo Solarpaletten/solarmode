@@ -83,7 +83,7 @@ function getTaskById(taskId) {
         task =>
             task.task_id === taskId
     )
-}  
+}
 
 function getTasksByStatus(status) {
 
@@ -94,10 +94,31 @@ function getTasksByStatus(status) {
     )
 }
 
+function createTask(task) {
+    const taskPath =
+       path.join(
+        TASKS_DIR,
+        `${task.task_id}.json`
+       )
+
+fs.writeFileSync(
+    taskPath,
+    JSON.stringify(
+        task,
+        null,
+        2
+    )
+
+)
+ return task
+}
+
+
 
 module.exports = {
     getAllTasks,
     getStats,
     getTaskById,
-    getTasksByStatus
+    getTasksByStatus,
+    createTask
 }
