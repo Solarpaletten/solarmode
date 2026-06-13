@@ -2,12 +2,15 @@ const http = require("http")
 const url = require("url")
 
 const {
-    getAllTasks,
-    getStats,
-    getTaskById,
-    getTasksByStatus
+    getStats
 } = require(
     "../registry/task-registry"
+)
+
+const {
+    handleTaskRoutes
+} = require("./routes/task-routes"
+
 )
 
 const {
@@ -58,6 +61,17 @@ const server =
             }
 
             if (
+                pathname.startsWith("/tasks")
+
+            ) {
+                return handleTaskRoutes(
+                       pathname,
+                       res,
+                       sendJson
+                       )
+            }
+
+            if (
                 pathname.startsWith(
                     "/artifacts"
                 )
@@ -67,49 +81,6 @@ const server =
                     pathname,
                     res,
                     sendJson
-                )
-            }
-
-
-            if (pathname === "/tasks") {
-                return sendJson(
-                    res,
-                    getAllTasks()
-                )
-            }
-
-            if (pathname.startsWith("/tasks/status/")) {
-
-                const status =
-                    pathname.split("/").pop()
-
-                return sendJson(
-                    res,
-                    getTasksByStatus(status)
-                )
-            }
-
-            if (pathname.startsWith("/tasks/")) {
-
-                const taskId =
-                    pathname.split("/").pop()
-
-                const task =
-                    getTaskById(taskId)
-
-                if (!task) {
-                    return sendJson(
-                        res,
-                        {
-                            error: "Task not found"
-                        },
-                        404
-                    )
-                }
-
-                return sendJson(
-                    res,
-                    task
                 )
             }
 
