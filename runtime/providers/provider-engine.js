@@ -30,12 +30,12 @@ const {
     )
    
 
-function executeTask(task) {
+async function executeTask(task) {
     if (
         task.provider === 
         `chatgpt`
     ) {
-     return chatgptProvider(task) 
+     return await chatgptProvider(task) 
 
     }
 
@@ -45,15 +45,14 @@ function executeTask(task) {
         `claude`
     ) {
       
-     return claudeProvider(task)
-
+     return await claudeProvider(task)
     }
 
     if (
         task.provider === 
         `qwen`
     ) {
-       return qwenProvider(task) 
+       return await qwenProvider(task) 
 
     }
 
@@ -61,7 +60,7 @@ function executeTask(task) {
         task.provider === 
         `grok`
     ) { 
-     return grokProvider(task)
+     return await grokProvider(task)
 
     }
 
@@ -69,7 +68,7 @@ function executeTask(task) {
        task.provider === 
         `deepseek`
     ) {
-       return deepseekProvider(task) 
+       return await deepseekProvider(task) 
 
     }
 
