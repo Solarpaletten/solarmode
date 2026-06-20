@@ -15,17 +15,45 @@ const client =
   })
 
 
-async function askClaude(prompt) {
+async function askClaude(
+  
+  systemPrompt,
+  
+  prompt
+
+) {
+
   const response =
+
     await client.messages.create({
-      model: `claude-opus-4-1`,
-      max_tokens: 1000,
+
+      model:
+      
+      `claude-opus-4-1`,
+
+      max_tokens:
+      
+      1000,
+
+      system:
+      
+      systemPrompt,
+
       messages: [
+
         {
-          role: "user",
-          content: prompt
+
+          role:
+          
+             "user",
+
+          content:
+
+             prompt
+
         }
       ]
+
     })
 
   return response.content[0].text
@@ -33,10 +61,17 @@ async function askClaude(prompt) {
 }
 
 async function claudeProvider(task) {
+
   const result =
+
     await askClaude(
+
+      task.systemPrompt,
+      
       task.prompt
+
     )
+
   return {
 
     result:

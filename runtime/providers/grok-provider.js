@@ -17,7 +17,7 @@ const client =
 
 async function askGrok(prompt) {
 
-    const systemPromt = `
+    const systemPrompt = `
     AI Auditor
 
 Mission:
@@ -33,7 +33,7 @@ Mission:
             messages: [
                 {
                   role: "system",
-                  content: systemPromt
+                  content: systemPrompt
                 },
                 {
                     role: "user",

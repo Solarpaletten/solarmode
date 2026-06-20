@@ -1,54 +1,97 @@
-require (
+require(
+
     "dotenv").config({
+
         path: __dirname + "/.env"
+
     })
 
 const OpenAI =
- require("openai")
+
+    require("openai")
 
 const client =
-    new OpenAI ({
+
+    new OpenAI({
+
         apiKey: `ollama`,
 
         baseURL:
-          "http://localhost:11434/v1"
+            "http://localhost:11434/v1",
 
-})
+        timeout:
 
-async function askQwen (prompt) {
+            300000
+
+    })
+
+async function askQwen(
     
+    systemPrompt,
+
+    prompt
+
+) {
+
     const response =
-       await client.chat.completions.create({
-            model: "qwen2.5:72b",
+
+        await client.chat.completions.create({
+
+            model: "qwen2.5:32b-instruct-q4_K_M",
+
+            timeout:
+
+                300000,
+            
             messages: [
                 {
-                    role: "user",
+                    role:
+                    
+                        "system",
+
                     content:
-                       prompt
+                        
+                        systemPrompt
+                   
+                },
+                {
+                    role:
+
+                        "user",
+                    
+                    content:
+                        
+                        prompt
                 }
             ]
         })
 
-    return response.choices[0].message.content  
+    return response.choices[0].message.content
 
 }
 
 
 
-async function qwenProvider(task) {   
-    
+async function qwenProvider(task) {
+
     const result =
-       await askQwen(
+
+        await askQwen(
+
+            task.systemPrompt,
+
             task.prompt
         )
 
-    return {    
-       result:
-         `Response from Qwen: ${result}`
+    return {
+        
+        result: 
+
+            `Response from Qwen: ${result}`
     }
 }
 
 module.exports = {
     askQwen,
-    qwenProvider    
+    qwenProvider
 }
