@@ -27,18 +27,7 @@ const {
 
 )
 
-
 async function executeWorkflow(task) {
-
-    
-
-    if (task.mode === "parallel") {
-
-        return await runParallel(roles, task)
-    
-    }
-
-    return await runSequential(roles, task)
 
 
     const mode =
@@ -57,6 +46,11 @@ async function executeWorkflow(task) {
 
     )
 
+    console.log(
+
+        mode.description
+    )
+
     const roles =
 
         getWorkflow(
@@ -64,58 +58,44 @@ async function executeWorkflow(task) {
             task.workflow
         )
 
-    const result = {}
 
     if (
 
-        mode
-
+        task.mode === "parallel"
 
     ) {
 
-        console.log(
+        return await runParallel(
 
-            mode.description
+            roles,
 
+            task
         )
 
-        for (const role of roles) {
-
-            console.log(
-
-                `Running ${role}...`
-
-            )
-
-            const start = Date.now()
-
-            result[role] =
-
-                await executeAgent({
-
-                    role,
-
-                    prompt:
-
-                        task.prompt
-
-                })
-
-            const elapsed =
-                ((Date.now() - start) / 1000)
-                    .toFixed(1)
-
-            console.log(
-
-                `${role} completed (${elapsed}s)`
-
-            )
-        }
-
-        return result
     }
 
-    
+    if (
+
+        task.mode === "sequential"
+
+        ||
+
+        !task.mode
+    ) {
+
+        return await runSequential(
+
+            roles,
+
+            task
+        )
+    }
+
+    throw new Error(
+
+        `Mode not supported: ${task.mode}`
+
+    )
 
 }
 
@@ -125,52 +105,121 @@ async function runSequential(roles, task) {
 
     for (const role of roles) {
 
-        result(role) =
+        result[role] =
+
             await executeAgent({
+
                 role,
-                prompt: task.prompt
+
+                prompt:
+
+                    task.prompt
             })
     }
-    
+
     return result
 }
+
 async function runParallel(roles, task) {
 
     const entries =
 
-         await Promise.all(
+        await Promise.all(
 
-            roles.map(role => {
+            roles.map(
 
-                const result =
-                    
-                     await executeAgent( {
+                async role => {
 
-                          role,
-                          prompt: task.prompt
-                     }
+                    console.log(
 
-                     )
+                        `Running ${role}...`
 
-                return [
-                    role,
-                    result
-                ]     
-            }
+                    )
+
+                    const start = Date.now()
+
+                    try {
+
+                        const result =
+
+                            await executeAgent({
+
+                                role,
+
+                                prompt:
+
+                                    task.prompt
+
+                            })
+
+                        const elapsed =
+
+                            ((Date.now() - start) / 1000)
+                                .toFixed(1)
+
+                        console.log(
+                            `${role} completed (${elapsed}s)`
+                        )
+
+
+                        return [
+
+                            role,
+
+                            {
+
+                                success: true,
+
+                                result
+                            }
+                        ]
+
+                    }
+
+                    catch (error) {
+
+                        console.log(
+
+                         `${role} failed
+                        
+                        ${error.message}`
+
+                        )
+
+
+                        return [
+
+                            role,
+
+                            {
+
+                                success: false,
+
+                                error:
+
+                                    error.message
+
+                            }
+                        ]
+
+                    }
+
+
+
+                }
+            )
+
         )
-    
-)
 
-    return Object.fromEntries(entries)
+
+    return Object.fromEntries(
+
+        entries
+    )
 
 }
-           
 
+module.exports = {
 
-
-    module.exports = {
-
-        executeWorkflow
-    }
-
-
+    executeWorkflow
+}
