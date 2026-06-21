@@ -27,6 +27,16 @@ const {
 
 )
 
+const {
+
+    buildConsensus
+
+} = require(
+    
+    "../consensus/consensus-engine"
+
+)
+
 async function executeWorkflow(task) {
 
 
@@ -65,11 +75,18 @@ async function executeWorkflow(task) {
 
     ) {
 
-        return await runParallel(
+        const results =
+
+            await runParallel(
 
             roles,
 
             task
+        )
+
+        return buildConsensus(
+
+            results
         )
 
     }
@@ -83,11 +100,18 @@ async function executeWorkflow(task) {
         !task.mode
     ) {
 
-        return await runSequential(
+        const results =
+        
+             await runSequential(
 
             roles,
 
             task
+        )
+
+        return buildConsensus(
+
+            results
         )
     }
 
