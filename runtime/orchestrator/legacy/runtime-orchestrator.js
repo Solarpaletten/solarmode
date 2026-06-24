@@ -1,3 +1,26 @@
+/*
+=====================================
+
+LEGACY RUNTIME V2 ORCHESTRATOR
+
+Pipeline:
+
+Task
+→ Provider
+→ Audit
+→ Candidate
+→ Decision
+→ Merge
+→ Apply
+
+Superseded by:
+
+runtime-v3.7-orchestrator
+
+=====================================
+*/
+
+
 const fs = require("fs")
 
 const path = require("path")
