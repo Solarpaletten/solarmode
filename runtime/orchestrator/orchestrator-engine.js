@@ -26,9 +26,6 @@ const {
 
 )
 
-
-
-
 const {
 
     buildContext
@@ -39,6 +36,14 @@ const {
 
 )
 
+const {
+
+    runCouncil
+} = require(
+
+    "../council/council-engine"
+
+)
 
 
 function saveOrchestratorToFile() {
@@ -76,15 +81,21 @@ async function orchestrate(task) {
 
         )
 
+    const  council =
+
+          runCouncil(
+
+            task,
+
+            context
+          )
+
     const result = {
 
         success: true,
-        confidence: 1,
-        finalAnswer:
-            "Context loaded successfully"
 
+        council
     }
-
     
     const orchestration = {
 
