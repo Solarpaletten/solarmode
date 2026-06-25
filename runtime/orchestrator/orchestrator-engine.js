@@ -55,29 +55,38 @@ const {
 
 )
 
+const {
+
+    buildArtifacts
+
+} = require(
+
+    "../artifacts/artifact-engine"
+)
+
 
 function saveOrchestratorToFile() {
 
-        fs.writeFileSync(
+    fs.writeFileSync(
 
-            ORCHESTRATOR_FILE,
+        ORCHESTRATOR_FILE,
 
-            JSON.stringify(
+        JSON.stringify(
 
-                getAll(),
+            getAll(),
 
-                null,
+            null,
 
-                2
-            ),
-            "utf8"
-        )
+            2
+        ),
+        "utf8"
+    )
 
-        return ORCHESTRATOR_FILE
+    return ORCHESTRATOR_FILE
 
-    }
+}
 
-   
+
 
 async function orchestrate(task) {
 
@@ -91,14 +100,14 @@ async function orchestrate(task) {
 
         )
 
-    const  council =
+    const council =
 
         runCouncil(
 
             task,
 
             context
-          )
+        )
 
     const consensus =
 
@@ -107,13 +116,25 @@ async function orchestrate(task) {
             council
         )
 
+    const artifacts =
+
+        buildArtifacts(
+
+            task,
+
+            consensus
+        )
+
     const result = {
 
         council,
 
-        consensus
+        consensus,
+
+        artifacts
     }
-    
+
+
     const orchestration = {
 
         id: Date.now(),
@@ -132,12 +153,12 @@ async function orchestrate(task) {
         orchestration
     )
 
-    saveOrchestratorToFile() 
+    saveOrchestratorToFile()
 
     return {
         context,
         result
-    }    
+    }
 }
 
 module.exports = {

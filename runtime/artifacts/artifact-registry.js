@@ -1,59 +1,27 @@
-const fs = require('fs')
+const artifacts = {}
 
-const path = require('path')
+function save(key, value) {
 
-const GENERATOR_DIR =
-        path.join(
-            __dirname,
-             '../generated'
-    )
+    artifacts[key] = value
 
-function getALLArtifacts() {
-    
-     const files =
-      fs.readdirSync(
-        GENERATOR_DIR
-    )
-    
-    return files.filter(
-        file =>
-             file.endsWith('.md')
-        )
 }
 
-function getArtifactByName(name) {
-    const artifacts =
-            getALLArtifacts()
-        
-    return artifacts.find(
-           artifact => 
-             artifact === name
-           ) || null
+function get(key) {
+    return artifacts[key]
+
 }
 
+function getAll() {
 
-function getArtifactContent(name) {
-    const artifact =
-            getArtifactByName(name)
-
-        if (!artifact) {
-            return null
-        }
-    
-    const artifactPath =
-        path.join(
-            GENERATOR_DIR,
-            name
-            )
-
-    return fs.readFileSync(
-                artifactPath,
-                 "utf-8"
-           ) || null
+    return artifacts
 }
 
 module.exports = {
-    getALLArtifacts,
-    getArtifactByName,
-    getArtifactContent
+
+    save,
+
+    get,
+
+    getAll
+
 }
