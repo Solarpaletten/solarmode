@@ -28,6 +28,15 @@ const {
 
 const {
 
+    buildConsensus
+
+} = require(
+
+    "../consensus/consensus-engine"
+)
+
+const {
+
     buildContext
 
 } = require(
@@ -39,6 +48,7 @@ const {
 const {
 
     runCouncil
+
 } = require(
 
     "../council/council-engine"
@@ -83,18 +93,25 @@ async function orchestrate(task) {
 
     const  council =
 
-          runCouncil(
+        runCouncil(
 
             task,
 
             context
           )
 
+    const consensus =
+
+        buildConsensus(
+
+            council
+        )
+
     const result = {
 
-        success: true,
+        council,
 
-        council
+        consensus
     }
     
     const orchestration = {

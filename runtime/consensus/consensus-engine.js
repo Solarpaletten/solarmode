@@ -1,10 +1,24 @@
 function generateFinalAnswer(results) {
 
-    return (
+    const failed =
 
-        "Consensus final answer placeholder"
+        Object.values(results)
 
-    )
+        .filter(
+
+            item => !item.success
+        )
+
+    if (
+
+        failed.length === 0
+    
+    )  {
+
+        return "Consensus approved"
+    } 
+    
+    return "Consensus requires revision"
 }
 
 function buildConsensus(results) {
@@ -78,9 +92,11 @@ function buildConsensus(results) {
     }
 }
 
-
-
 module.exports = {
 
-    buildConsensus
+    buildConsensus,
+
+    generateFinalAnswer
+
+
 }
