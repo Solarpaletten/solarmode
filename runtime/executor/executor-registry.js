@@ -1,20 +1,21 @@
-const storage = {}
+const executor = {}
 
 function save(key, value) {
-
-    storage[key] = value
+     
+    executor[key] = value
 
 }
 
 function get(key) {
-    
-    return storage[key]
+
+    return executor[key]
 
 }
 
 function getAll() {
 
-    return storage
+    return executor
+
 }
 
 module.exports = {
