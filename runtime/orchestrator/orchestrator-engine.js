@@ -16,13 +16,11 @@ const {
 
     save,
 
-    get,
-
     getAll
 
 } = require(
 
-    './orchestrator-registry'
+    "./orchestrator-registry"
 
 )
 
@@ -64,6 +62,15 @@ const {
     "../artifacts/artifact-engine"
 )
 
+const {
+
+    execute
+
+} = require(
+
+    "../executor/executor-engine"
+
+)
 
 function saveOrchestratorToFile() {
 
@@ -125,40 +132,39 @@ async function orchestrate(task) {
             consensus
         )
 
-    const result = {
+    const runtime = {
+    
+        id: Date.now(),
+
+        task,
+
+        context,
 
         council,
 
         consensus,
 
-        artifacts
+        artifacts,
+
+        createdAt:
+           new Date().toISOString(),
+        
     }
 
+    runtime.execution =
+        execute(runtime)
 
-    const orchestration = {
-
-        id: Date.now(),
-        task,
-        context,
-        result,
-        timeStamp:
-            new Date()
-                .toISOString()
-    }
 
     save(
 
-        orchestration.id,
+        runtime.id,
 
-        orchestration
+        runtime
     )
 
     saveOrchestratorToFile()
 
-    return {
-        context,
-        result
-    }
+    return runtime
 }
 
 module.exports = {

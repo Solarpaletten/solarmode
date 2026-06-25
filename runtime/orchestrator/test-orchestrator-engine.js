@@ -11,31 +11,23 @@ const {
 
 async function main() {
 
-    const result =
+    const runtime =
 
         await orchestrate({
 
-                sessionId:
+                sessionId: 1782134867443,
 
-                    1782134867443,
-
-                workflow:
-
-                    "design-feature"
+                workflow: "design-feature"
 
         })
 
 
-    console.log (
+    console.log(runtime.context)
 
-        result.context
-    )
+    console.log(runtime.consensus)
 
-    console.log (
+    console.log(runtime.execution)
 
-        result.result
-
-    )
 
 }
 
