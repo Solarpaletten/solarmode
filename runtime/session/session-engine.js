@@ -254,7 +254,7 @@ const loaded =
 
 console.log(
 
-    `💬 Sessions loaded:
+    `💬 Session loaded:
 
 ${loaded} records`
 

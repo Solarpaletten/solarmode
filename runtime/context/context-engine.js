@@ -32,13 +32,15 @@ const {
 
 } = require(
 
-    "../sessions/session-engine"
+    "../session/session-engine"
 
 )
 
 const {
 
-    findByWorkflow
+    findByWorkflow,
+
+    findByConfidence
 
 } = require(
 
@@ -62,13 +64,23 @@ function buildContext(
 
         )
 
-    const memory =
+    const memory = {
+
+        workflow:
 
         findByWorkflow(
 
             workflow
 
+        ),
+
+        successful:
+
+        findByConfidence(
+
+            0.8
         )
+    }
 
     const context = {
 
