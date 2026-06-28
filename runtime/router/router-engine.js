@@ -145,7 +145,20 @@ function countRouterRecords() {
     return Object.keys(data).length
 }
 
-function routeTask(taskFile, provider, workflowId,taskId) {
+function createRootEventId(name = "root") {
+    return createEventId(name)
+}
+
+function routeTask(
+    taskFile,
+    provider,
+    workflowId,
+    taskId,
+    parentEventId
+) {
+
+    const eventId =
+        createEventId("route")
 
     const source = path.join(
         __dirname,
@@ -166,12 +179,11 @@ function routeTask(taskFile, provider, workflowId,taskId) {
         destination
     )
 
-    const eventId =
-        createEventId("route")
-
     store(
         eventId,
         {
+            eventId,
+            parentEventId,
             workflowId,
             taskId,
             event: "route",
@@ -181,13 +193,13 @@ function routeTask(taskFile, provider, workflowId,taskId) {
         }
     )
 
-
-
-
-    return destination
+    return eventId
 }
 
-function claimTask(provider, taskFile, workflowId, taskId) {
+function claimTask(provider, taskFile, workflowId, taskId, parentEventId) {
+
+    const eventId = createEventId("claim")
+
     const source = path.join(
         __dirname,
         "../workspace",
@@ -209,12 +221,11 @@ function claimTask(provider, taskFile, workflowId, taskId) {
         destination
     )
 
-    const eventId =
-        createEventId("claim")
-
     store(
         eventId,
-        {   
+        {
+            eventId,
+            parentEventId,
             workflowId,
             taskId,
             event: "claim",
@@ -224,11 +235,14 @@ function claimTask(provider, taskFile, workflowId, taskId) {
         }
     )
 
-    return destination
+    return eventId
 
 }
 
-function completeTask(provider, taskFile, workflowId, taskId) {
+function completeTask(provider, taskFile, workflowId, taskId, parentEventId) {
+
+    const eventId = createEventId("complete")
+
     const source = path.join(
         __dirname,
         "../workspace",
@@ -250,12 +264,11 @@ function completeTask(provider, taskFile, workflowId, taskId) {
         destination
     )
 
-    const eventId =
-        createEventId("complete")
-
     store(
         eventId,
         {
+            eventId,
+            parentEventId,
             workflowId,
             taskId,
             event: "complete",
@@ -265,15 +278,19 @@ function completeTask(provider, taskFile, workflowId, taskId) {
         }
     )
 
-    return destination
+    return eventId
 }
 
 function archiveTask(
     provider,
     taskFile,
     workflowId,
-    taskId
+    taskId,
+    parentEventId
 ) {
+
+    const eventId = createEventId("archive")
+
     const source = path.join(
         __dirname,
         "../workspace",
@@ -295,12 +312,11 @@ function archiveTask(
         destination
     )
 
-    const eventId =
-        createEventId("archive")
-
     store(
         eventId,
-        {  
+        {
+            eventId,
+            parentEventId,
             workflowId,
             taskId,
             event: "archive",
@@ -310,7 +326,7 @@ function archiveTask(
         }
     )
 
-    return destination
+    return eventId
 
 }
 
@@ -319,8 +335,11 @@ function handoffArtifacts(
     toProvider,
     workflow,
     workflowId,
-    taskId
+    taskId,
+    parentEventId
 ) {
+
+    const eventId = createEventId("handoff")
 
     const sourceDir = path.join(
         __dirname,
@@ -344,12 +363,11 @@ function handoffArtifacts(
         )
     }
 
-    const eventId =
-        createEventId("handoff")
-
     store(
         eventId,
-        {   
+        {
+            eventId,
+            parentEventId,
             workflowId,
             taskId,
             event: "handoff",
@@ -363,6 +381,8 @@ function handoffArtifacts(
     )
 
     return {
+        eventId,
+        parentEventId,
         workflowId,
         taskId,
         transferred: files.length,
@@ -381,51 +401,55 @@ function executeWorkflow(
 ) {
 
     const workflowId =
-    createWorkflowId(workflow)
+        createWorkflowId(workflow)
+
     const taskId =
-    createTaskId(taskFile) 
+        createTaskId(taskFile)
 
 
+    const routeEventId =
+        routeTask(
+            taskFile,
+            provider,
+            workflowId,
+            taskId,
+            null
+        )
 
-    routeTask(
-        taskFile,
-        provider,
-        workflowId,
-        taskId
-    )
+    const claimEventId =
+        claimTask(
+            provider,
+            taskFile,
+            workflowId,
+            taskId,
+            routeEventId
+        )
 
-    claimTask(
+    const completeEventId =
+        completeTask(
+            provider,
+            taskFile,
+            workflowId,
+            taskId,
+            claimEventId
+        )
 
-        provider,
-        taskFile,
-        workflowId,
-        taskId
-    )
-
-    completeTask(
-
-        provider,
-        taskFile,
-        workflowId,
-        taskId
-    )
-
-    archiveTask(
-
-        provider,
-        taskFile,
-        workflowId,
-        taskId
-        
-    )
+    const archiveEventId =
+        archiveTask(
+            provider,
+            taskFile,
+            workflowId,
+            taskId,
+            completeEventId
+        )
 
     return handoffArtifacts(
-
         provider,
         nextProvider,
         workflow,
         workflowId,
-        taskId
+        taskId,
+        archiveEventId
     )
 
 }
@@ -446,14 +470,14 @@ function store(key, value) {
 }
 
 module.exports = {
-     
+    createRootEventId,
     initializeRouter,
     countRouterRecords,
+    createEventId,
     routeTask,
     claimTask,
     completeTask,
     archiveTask,
     handoffArtifacts,
     executeWorkflow
-    
 }
