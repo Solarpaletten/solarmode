@@ -18,15 +18,18 @@ const {
 
     save,
 
-    getAll,
-
-    clear
+    getAll
 
 } = require(
 
     './router-registry'
 
 )
+
+const {
+    createWorkflowId,
+    createTaskId
+} = require("../runtime-id")
 
 function loadRouter() {
 
@@ -143,7 +146,7 @@ function countRouterRecords() {
     return Object.keys(data).length
 }
 
-function routeTask(taskFile, provider) {
+function routeTask(taskFile, provider, workflowId,taskId) {
 
     const source = path.join(
         __dirname,
@@ -170,6 +173,8 @@ function routeTask(taskFile, provider) {
     store(
         id,
         {
+            workflowId,
+            taskId,
             event: "route",
             task: taskFile,
             provider,
@@ -183,7 +188,7 @@ function routeTask(taskFile, provider) {
     return destination
 }
 
-function claimTask(provider, taskFile) {
+function claimTask(provider, taskFile, workflowId, taskId) {
     const source = path.join(
         __dirname,
         "../workspace",
@@ -210,7 +215,9 @@ function claimTask(provider, taskFile) {
 
     store(
         id,
-        {
+        {   
+            workflowId,
+            taskId,
             event: "claim",
             task: taskFile,
             provider,
@@ -222,7 +229,7 @@ function claimTask(provider, taskFile) {
 
 }
 
-function completeTask(provider, taskFile) {
+function completeTask(provider, taskFile, workflowId, taskId) {
     const source = path.join(
         __dirname,
         "../workspace",
@@ -250,6 +257,8 @@ function completeTask(provider, taskFile) {
     store(
         id,
         {
+            workflowId,
+            taskId,
             event: "complete",
             task: taskFile,
             provider,
@@ -262,7 +271,9 @@ function completeTask(provider, taskFile) {
 
 function archiveTask(
     provider,
-    taskFile
+    taskFile,
+    workflowId,
+    taskId
 ) {
     const source = path.join(
         __dirname,
@@ -290,7 +301,9 @@ function archiveTask(
 
     store(
         id,
-        {
+        {  
+            workflowId,
+            taskId,
             event: "archived",
             task: taskFile,
             provider,
@@ -305,7 +318,9 @@ function archiveTask(
 function handoffArtifacts(
     fromProvider,
     toProvider,
-    workflow
+    workflow,
+    workflowId,
+    taskId
 ) {
 
     const sourceDir = path.join(
@@ -335,7 +350,9 @@ function handoffArtifacts(
 
     store(
         id,
-        {
+        {   
+            workflowId,
+            taskId,
             event: "handoff",
             workflow,
             from: fromProvider,
@@ -347,6 +364,8 @@ function handoffArtifacts(
     )
 
     return {
+        workflowId,
+        taskId,
         transferred: files.length,
         from: fromProvider,
         to: toProvider,
@@ -359,36 +378,55 @@ function executeWorkflow(
     taskFile,
     provider,
     nextProvider,
-    workflow
+    workflow,
 ) {
+
+    const workflowId =
+    createWorkflowId(workflow)
+    const taskId =
+    createTaskId(taskFile) 
+
+
+
     routeTask(
         taskFile,
         provider,
+        workflowId,
+        taskId
     )
 
     claimTask(
 
         provider,
-        taskFile
+        taskFile,
+        workflowId,
+        taskId
     )
 
     completeTask(
 
         provider,
-        taskFile
+        taskFile,
+        workflowId,
+        taskId
     )
 
     archiveTask(
 
         provider,
-        taskFile
+        taskFile,
+        workflowId,
+        taskId
+        
     )
 
     return handoffArtifacts(
 
         provider,
         nextProvider,
-        workflow
+        workflow,
+        workflowId,
+        taskId
     )
 
 }
