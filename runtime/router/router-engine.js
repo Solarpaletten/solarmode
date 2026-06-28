@@ -2,8 +2,6 @@ const fs = require("fs")
 
 const path = require("path")
 
-const crypto = require("crypto")
-
 const ROUTER_FILE =
 
     path.join(
@@ -27,6 +25,7 @@ const {
 )
 
 const {
+    createEventId,
     createWorkflowId,
     createTaskId
 } = require("../runtime-id")
@@ -167,11 +166,11 @@ function routeTask(taskFile, provider, workflowId,taskId) {
         destination
     )
 
-    const id =
-        crypto.randomUUID()
+    const eventId =
+        createEventId("route")
 
     store(
-        id,
+        eventId,
         {
             workflowId,
             taskId,
@@ -210,11 +209,11 @@ function claimTask(provider, taskFile, workflowId, taskId) {
         destination
     )
 
-    const id =
-        crypto.randomUUID()
+    const eventId =
+        createEventId("claim")
 
     store(
-        id,
+        eventId,
         {   
             workflowId,
             taskId,
@@ -251,11 +250,11 @@ function completeTask(provider, taskFile, workflowId, taskId) {
         destination
     )
 
-    const id =
-        crypto.randomUUID()
+    const eventId =
+        createEventId("complete")
 
     store(
-        id,
+        eventId,
         {
             workflowId,
             taskId,
@@ -296,15 +295,15 @@ function archiveTask(
         destination
     )
 
-    const id =
-        crypto.randomUUID()
+    const eventId =
+        createEventId("archive")
 
     store(
-        id,
+        eventId,
         {  
             workflowId,
             taskId,
-            event: "archived",
+            event: "archive",
             task: taskFile,
             provider,
             timestamp: new Date().toISOString()
@@ -345,11 +344,11 @@ function handoffArtifacts(
         )
     }
 
-    const id =
-        crypto.randomUUID()
+    const eventId =
+        createEventId("handoff")
 
     store(
-        id,
+        eventId,
         {   
             workflowId,
             taskId,
@@ -447,7 +446,7 @@ function store(key, value) {
 }
 
 module.exports = {
-
+     
     initializeRouter,
     countRouterRecords,
     routeTask,

@@ -9,6 +9,10 @@ function createId(prefix, name = "unknown") {
     return `${prefix}-${normalized}-${crypto.randomUUID()}`
 }
 
+function createEventId(name) {
+    return createId("ev", name)
+}
+
 function createWorkflowId(name) {
     return createId ("wf", name)
 }
@@ -39,6 +43,7 @@ function createCouncilId(name) {
 
 module.exports = {
     createId,
+    createEventId,
     createWorkflowId,
     createTaskId,
     createSessionId,
