@@ -1,29 +1,27 @@
 const executor = {}
 
 function save(key, value) {
-     
-    executor[key] = value
+
+  executor[key] = value
 
 }
 
 function get(key) {
-
-    return executor[key]
+  return executor[key]
 
 }
 
 function getAll() {
 
-    return executor
-
+  return executor
 }
 
 module.exports = {
 
-    save,
+  save,
 
-    get,
+  get,
 
-    getAll
+  getAll
 
 }

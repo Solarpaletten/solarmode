@@ -41,6 +41,10 @@ function createCouncilId(name) {
     return createId ("cl", name)
 }
 
+function createExecutionId() {
+    return `ex-${crypto.randomUUID()}`
+}
+
 module.exports = {
     createId,
     createEventId,
@@ -50,6 +54,7 @@ module.exports = {
     createArtifactId,
     createMemoryId,
     createConsensusId,
-    createCouncilId
+    createCouncilId,
+    createExecutionId
 }
 
