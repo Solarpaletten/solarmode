@@ -57,10 +57,43 @@ function traceWorkflow(workflowId) {
        .filter(event => event.workflowId === workflowId)
 }
 
+function findRootEvent(workflowId) {
+  return traceWorkflow(workflowId)
+      .find(event => event.parentEventId === null)
+}
+
+function buildTree(eventId) {
+    const event = getEvent(eventId)
+
+    if (!event) {
+        return null
+    }
+    
+    return {
+      ...event,
+      children: getChildren(event.eventId)
+           .map(child => buildTree(child.eventId))
+    }
+}
+
+function traceTree(workflowId) {
+     const root = findRootEvent(workflowId)
+
+     if (!root) {
+         return null
+     }
+
+     return buildTree(root.eventId)
+}
+
+
 module.exports = {
   getEvent,
   getParent,
   getChildren,
   traceEvent,
-  traceWorkflow
+  traceWorkflow,
+  findRootEvent,
+  buildTree,
+  traceTree
 }
