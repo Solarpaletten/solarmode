@@ -5,16 +5,16 @@ const {
 )
 
 async function test() {
-console.log(
-    await executeTask(
-        {
-            provider: 
-                `claude`,
-            prompt:
-                `Write 5 lines about Solar Runtime`
-        }
+
+    console.log(
+
+        await executeTask({
+            provider: "claude",
+            systemPrompt: "You are software engineer.",
+            prompt: "Write 5 lines about Solar Runtime"
+        })
     )
-)
+
 
 }
 

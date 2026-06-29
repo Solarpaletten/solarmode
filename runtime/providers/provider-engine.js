@@ -1,4 +1,3 @@
-
 const {
     chatgptProvider
     } = require(
@@ -28,55 +27,27 @@ const {
 } = require(
        `./deepseek-provider`
     )
-   
+
+const providers = {
+    chatgpt: chatgptProvider,
+    claude: claudeProvider,
+    qwen: qwenProvider,
+    grok: grokProvider,
+    deepseek: deepseekProvider
+}
 
 async function executeTask(task) {
-    if (
-        task.provider === 
-        `chatgpt`
-    ) {
-     return await chatgptProvider(task) 
+    const provider =
+        providers[task.provider]
 
-    }
-
-
-    if ( 
-        task.provider === 
-        `claude`
-    ) {
-      
-     return await claudeProvider(task)
-    }
-
-    if (
-        task.provider === 
-        `qwen`
-    ) {
-       return await qwenProvider(task) 
-
-    }
-
-    if ( 
-        task.provider === 
-        `grok`
-    ) { 
-     return await grokProvider(task)
-
-    }
-
-    if (
-       task.provider === 
-        `deepseek`
-    ) {
-       return await deepseekProvider(task) 
-
-    }
-
-
-    throw new Error(
-        `Provider not found:
-         ${task.provider}`
+    if (!provider) {
+        throw new Error(
+            `Unknown provider:
+            ${task.provider}`
         )
+    }
+
+    return await provider(task)
 }
 
 module.exports = {

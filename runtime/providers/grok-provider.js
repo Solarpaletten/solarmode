@@ -12,7 +12,7 @@ const client =
             process.env.XAI_API_KEY,
         
         baseURL:
-           "https:///api.x.ai/v1" 
+           "https://api.x.ai/v1" 
     })
 
 async function askGrok(prompt) {
