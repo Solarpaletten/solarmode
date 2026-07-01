@@ -2,6 +2,8 @@ const fs = require("fs")
 
 const path = require("path")
 
+const crypto = require("crypto")
+
 const ARTIFACT_FILE =
   path.join(
     __dirname,
@@ -10,7 +12,6 @@ const ARTIFACT_FILE =
 
 const {
   save,
-  get,
   getAll
 } = require("./artifact-registry")
 
@@ -19,6 +20,111 @@ const {
 } = require(
   "../runtime-id"
 )
+
+const artifactExtensions = {
+  report: "md",
+  architecture: "md",
+  readme: "md",
+  "source-code": "js",
+  "test-suite": "js",
+  config: "json",
+  deploy: "sh",
+  package: "zip"
+}
+
+function createArtifact(
+  executionResult,
+  artifactType = "report"
+) {
+
+
+  const extension =
+    artifactExtensions[
+    artifactType
+    ] || "txt"
+
+  const artifactId =
+    createArtifactId(
+      artifactType
+    )
+
+  const content =
+    executionResult.providerResult.result
+
+  const hash =
+    crypto
+      .createHash("sha256")
+      .update(content)
+      .digest("hex")
+
+
+
+  const artifactPath =
+    path.join(
+      __dirname,
+      "./generated",
+      `${artifactId}.${extension}`
+    )
+
+  const generatedDir =
+    path.join(
+      __dirname,
+      "./generated"
+    )
+
+  if (!fs.existsSync(generatedDir)) {
+
+    fs.mkdirSync(
+      generatedDir,
+      { recursive: true }
+    )
+  }
+
+  fs.writeFileSync(
+    artifactPath,
+    content,
+    "utf8"
+  )
+
+  const stats =
+    fs.statSync(
+      artifactPath
+    )
+
+  const artifact = {
+    artifactId,
+    artifactType,
+    extension,
+    artifactPath,
+    executionId:
+      executionResult.executionId,
+    provider:
+      executionResult.providerResult.provider,
+    content,
+    hash,
+    size:
+      stats.size,
+    status:
+      "generated",
+    mimeType: "application/javascript",
+    version: "v3.26",
+    checksumType: "sha256",
+    createdBy:
+      executionResult.providerResult.provider,
+    timestamp:
+      new Date().toISOString()
+  }
+
+  save(
+    artifactId,
+    artifact
+  )
+
+  saveToFile()
+
+  return artifact
+
+}
 
 function saveToFile() {
 
@@ -33,69 +139,6 @@ function saveToFile() {
   )
 
   return ARTIFACT_FILE
-}
-
-function createArtifact(executionResult) {
-
-  const artifactType =
-    "report"
-
-  const artifactId =
-       createArtifactId(
-        artifactType
-      )
-  
-  const generatedDir =
-    path.join(
-      __dirname,
-      "./generated"
-    )
-  
-  if (!fs.existsSync(generatedDir)) {
-
-    fs.mkdirSync(
-      generatedDir,
-      {recursive: true}
-    )
-  }
-
-  const artifactPath =
-    path.join(
-      __dirname,
-      "./generated",
-      `${artifactId}.md`
-    )
-
-  const content =
-    executionResult.providerResult.result
-  
-  fs.writeFileSync(
-    artifactPath,
-    content,
-    "utf8"
-  )
-
-  const artifact = {
-      artifactId,
-      artifactType,
-      artifactPath,
-      executionId: 
-        executionResult.executionId,
-      provider: 
-        executionResult.providerResult.provider,
-      content,
-      timestamp: 
-        new Date().toISOString()
-}
-
-  save(
-      artifactId,
-      artifact
-  )
-  
-  saveToFile()
-
-  return artifact
 }
 
 module.exports = {
